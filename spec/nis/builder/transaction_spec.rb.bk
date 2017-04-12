@@ -1,0 +1,55 @@
+require 'spec_helper'
+
+describe Nis::Builder::Transaction do
+  before do
+    Timecop.freeze(Time.local(2017, 1, 1))
+  end
+
+  let(:recipient) { 'TDGIMREMR5NSRFUOMPI5OOHLDATCABNPC5ID2SVA' }
+  let(:signer) { 'a1aaca6c17a24252e674d155713cdf55996ad00175be4af02a20c67b59f9fe8a' }
+  let(:transaction) do
+    Nis::Struct::Transaction.new(
+      timestamp: Nis::Util.now,
+      amount: 1_000_000_000,
+      fee: 3_000_000,
+      recipient: recipient,
+      type: Nis::Struct::Transaction::TRANSFER,
+      deadline: Nis::Util.now + 42_300,
+      message: {
+        payload: '74657374207472616e73616374696f6e',
+        type: 1
+      },
+      version: Nis::Struct::Transaction::TESTNET_VERSION_1,
+      signer: signer,
+    )
+  end
+  let(:builder) do
+    described_class.new(
+      network: :testnet,
+      type: :transfer,
+      version: 1,
+    ) do |b|
+      b.amount = 1_000_000_000
+      b.fee    = 3_000_000
+      b.to     = recipient
+      b.from   = signer
+    end
+  end
+
+  subject { builder }
+
+  describe '#transaction' do
+    # before do
+    #   subject.amount = 1_000_000_000
+    #   subject.fee    = 3_000_000
+    #   subject.to     = recipient
+    #   subject.from   = signer
+    # end
+
+    it { expect(subject.transaction.to_hash).to eq transaction.to_hash }
+  end
+
+  after do
+    Timecop.return
+  end
+end

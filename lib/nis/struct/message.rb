@@ -8,9 +8,13 @@ class Nis::Struct
     TYPE_PLAIN     = 1
     TYPE_ENCRYPTED = 2
 
-    def initialize(value = '')
+    def initialize(value = '', encryption: false)
       @value = value
       @type  = TYPE_PLAIN
+      if encryption
+        raise NotImplementedError, 'message encryption.'
+        encrypt!
+      end
     end
 
     # @return [Boolean]
@@ -50,6 +54,12 @@ class Nis::Struct
 
     def payload
       @payload ||= value.unpack('H*').join
+    end
+
+    private
+
+    def encrypt!
+      @type = TYPE_ENCRYPTED
     end
   end
 end

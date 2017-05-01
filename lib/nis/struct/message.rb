@@ -3,6 +3,9 @@ class Nis::Struct
   # @attr [Integer] type
   # @attr [String] payload
   class Message
+    include Nis::Util::Assignable
+    include Nis::Util::Encryptable
+
     attr_accessor :value, :type, :payload
 
     TYPE_PLAIN     = 1

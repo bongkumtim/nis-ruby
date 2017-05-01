@@ -36,4 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'faraday', '~> 0.11'
   spec.add_dependency 'faraday_middleware', '~> 0.11'
   spec.add_dependency 'thor', '~> 0.19'
+  spec.add_dependency 'rbnacl', '~> 4.0'
+  spec.add_dependency 'rbnacl-libsodium', '~> 1.0'
 end
